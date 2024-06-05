@@ -1,6 +1,8 @@
 ## Overview:
 This script is used to compare the Powerloom Snapshotter's, RPC Events, and UniswapV3's GraphQL subgraph 24 hour trading volume data for UniswapV3 pools.
 
+It currently only supports UniswapV3 pools that contain ETH or a stablecoin as one of the tokens.
+
 Example Output:
 
     Pool: 0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640

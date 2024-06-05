@@ -126,14 +126,14 @@ async def get_swap_event_total(pool_address: str, block_number: int, eth_price_d
 
     # set flags based on pool composition for later price calculations
     stable_weth_flag = False
-    stable_stable_flag = False
+    stable_flag = False
 
     if token0 in STABLE_COINS and token1 == weth:
         stable_weth_flag = True
     elif token1 in STABLE_COINS and token0 == weth:
         stable_weth_flag = True
-    elif token0 in STABLE_COINS and token1 in STABLE_COINS:
-        stable_stable_flag = True
+    elif token0 in STABLE_COINS or token1 in STABLE_COINS:
+        stable_flag = True
     
     # build block range for last 24 hours
     start_block = block_number - BLOCKS_PER_DAY
@@ -190,9 +190,13 @@ async def get_swap_event_total(pool_address: str, block_number: int, eth_price_d
                 elif token0 == weth:
                     swap_amount = abs(evt['args']['amount0'] / 10 ** token_data['token0_decimals'])
                     swap_usd = price0 * swap_amount
-            elif stable_stable_flag:
-                swap_amount = abs(evt['args']['amount0'] / 10 ** token_data['token0_decimals'])
-                swap_usd = price0 * swap_amount
+            elif stable_flag:
+                if token1 in STABLE_COINS:
+                    swap_amount = abs(evt['args']['amount1'] / 10 ** token_data['token1_decimals'])
+                    swap_usd = price1 * swap_amount
+                elif token0 in STABLE_COINS:
+                    swap_amount = abs(evt['args']['amount0'] / 10 ** token_data['token0_decimals'])
+                    swap_usd = price0 * swap_amount
             else:
                 if token1 == weth:
                     swap_amount = abs(evt['args']['amount1'] / 10 ** token_data['token1_decimals'])
