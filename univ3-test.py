@@ -7,6 +7,7 @@ from config import pool_addresses
 from config import powerloom_endpoint
 from config import top_pools_id
 from config import weth_address
+from config import get_logs_block_length
 from utils.constants import BLOCKS_PER_DAY
 from utils.constants import GRAPH_QUERY, GRAPH_URL
 from utils.constants import STABLE_COINS
@@ -46,7 +47,7 @@ async def build_eth_price_dict(block_number: int):
     eth_price_dict = {}
 
     # get average price for each block range using the price at the start and end of the block range
-    for i in batch(range(start_block, end_block), 1000):
+    for i in batch(range(start_block, end_block), get_logs_block_length):
         start_data = await usdc_weth_contract.functions.slot0().call(block_identifier=i.start)
         end_data = await usdc_weth_contract.functions.slot0().call(block_identifier=i.stop - 1)
 
@@ -147,7 +148,7 @@ async def get_swap_event_total(pool_address: str, block_number: int, eth_price_d
     all_events = []
 
     # get and decode all swap events for each chunk of blocks
-    for i in batch(range(start_block, end_block), 1000):
+    for i in batch(range(start_block, end_block), get_logs_block_length):
 
         event_log_query = {
             'address': Web3.to_checksum_address(pool_address),
@@ -273,7 +274,7 @@ async def get_graph_data(pool_address: str, block_number: int):
     graph_tasks = []
 
     # make initial request to get total swaps for each block range
-    for i in batch(range(start_block, end_block), 1000):
+    for i in batch(range(start_block, end_block), get_logs_block_length):
         to_block = i.stop - 1
         graph_tasks.append(asyncio.create_task(
             graph_request(
@@ -296,7 +297,7 @@ async def get_graph_data(pool_address: str, block_number: int):
             retry_tasks = []
 
             # retry with smaller batch sizes once for each initial batch
-            for i in batch(range(result['from_block'], result['to_block']), 250):
+            for i in batch(range(result['from_block'], result['to_block']), (get_logs_block_length / 4)):
                 to_block = i.stop - 1
                 retry_tasks.append(asyncio.create_task(
                     graph_request(

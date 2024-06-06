@@ -33,6 +33,7 @@ Example Output:
 
 ## Setup:
 - run `poetry install`
+- copy `config.example.py` to `config.py`
 - add a RPC endpoint to the `rpc_url` variable in `config.py`
 - all settings that may be changed are located in `config.py`
     - `pool_addresses`: a list of UniswapV3 pool addresses that you would like to compare with Powerloom data.
@@ -40,6 +41,7 @@ Example Output:
     - `rpc_url`: chain rpc url
     - `powerloom_endpoint`: url of core-api endpoint for Powerloom node
     - `top_pools_id`: Powerloom project ID for UniswapV3 aggregate snapshot containing theh 24hr volume data for all pools
+    - `get_logs_block_length`: the size of the block length to be used for the RPC `get_logs()` queries
 
 ## Run:
 - `poetry run python3 univ3-test.py`
