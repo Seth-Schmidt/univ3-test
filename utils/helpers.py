@@ -1,5 +1,7 @@
 from eth_utils import keccak
 
+from config import namespace
+from config import volume_project_id
 
 def sqrtPriceX96ToTokenPrices(sqrtPriceX96, token0_decimals, token1_decimals):
     # https://blog.uniswap.org/uniswap-v3-math-primer
@@ -47,3 +49,11 @@ def get_event_sig_and_abi(event_signatures, event_abis):
         for name, sig in event_signatures.items()
     }
     return event_sig, event_abi
+
+
+def get_project_id(address: str):
+    """
+    Given a project ID and a namespace, returns a project ID with the
+    namespace prepended.
+    """
+    return f'{volume_project_id}:{address}:{namespace}'

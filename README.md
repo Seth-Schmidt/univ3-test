@@ -42,9 +42,15 @@ Example Output:
     - `powerloom_endpoint`: url of core-api endpoint for Powerloom node
     - `top_pools_id`: Powerloom project ID for UniswapV3 aggregate snapshot containing theh 24hr volume data for all pools
     - `get_logs_block_length`: the size of the block length to be used for the RPC `get_logs()` queries
+- settings that may be changed for lite mode in `config.py`
+    - `powerloom_epoch_size`: length of epochs for powerloom
+    - `lite_mode_block_length`: length of total blocks to fetch data for in lite mode, must be a multiple of powerloom_epoch_size
 
 ## Run:
 - `poetry run python3 univ3-test.py`
+
+## Run (Lite Mode)
+- `poetry run python3 univ3-test-lite.py`
  
 
 
