@@ -354,14 +354,15 @@ async def get_graph_data(pool_address: str, block_number: int):
     return total
 
 
-async def get_all_totals_for_pool(pool_address: str, block_number: int, eth_price_dict: dict = {}):
+async def get_all_totals_for_pool(pool_address: str):
     powerloom_total, epoch_end_block = await get_powerloom_data(pool_address)
     print(f"Finished gather Powerloom data for pool: {pool_address}")
     print("- - - - -")
-    swap_event_total = await get_swap_event_total(pool_address, block_number, eth_price_dict)
+    eth_price_dict = await build_eth_price_dict(epoch_end_block)
+    swap_event_total = await get_swap_event_total(pool_address, epoch_end_block, eth_price_dict)
     print(f"Finished gather Swap Event data for pool: {pool_address}")
     print("- - - - -")
-    graph_total = await get_graph_data(pool_address, block_number)
+    graph_total = await get_graph_data(pool_address, epoch_end_block)
     print(f"Finished gather Graph data for pool: {pool_address}")
     print("- - - - -")
 
@@ -376,24 +377,12 @@ async def main():
 
     address = w3.to_checksum_address(pool_addresses[0])
 
-    # get last finalized epoch block for the first pair in the config list
-    # using the same end block for all pools for easier price calculations
-    epoch_end_block = await get_powerloom_last_finalized_epoch_block(
-        pool_address=address
-    )
-
-    # build an average ETH price dictionary for the last 24 hours up to the epoch end block
-    # this is only used to calculate USD value of swaps for pools without stablecoins
-    eth_price_dict = await build_eth_price_dict(epoch_end_block)
-
     total_tasks = []
     for address in pool_addresses:
         total_tasks.append(
             asyncio.create_task(
                 get_all_totals_for_pool(
-                    pool_address=address,
-                    block_number=epoch_end_block,
-                    eth_price_dict=eth_price_dict
+                    pool_address=address
                 )
             )
         )
