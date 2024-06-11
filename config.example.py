@@ -26,3 +26,6 @@ namespace = "UNISWAPV3"
 
 # project ID for volume data
 volume_project_id = "pairContract_trade_volume"
+
+# powerloom epoch_id to start fetching data from for the lite-epoch mode
+powerloom_end_epoch = 236

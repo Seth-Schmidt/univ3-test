@@ -45,12 +45,17 @@ Example Output:
 - settings that may be changed for lite mode in `config.py`
     - `powerloom_epoch_size`: length of epochs for powerloom
     - `lite_mode_block_length`: length of total blocks to fetch data for in lite mode, must be a multiple of powerloom_epoch_size
+- settings that may be changes for lite-epoch mode in `config.py`
+    - `powerloom_end_epoch`: epoch id from which to start the data gathering
 
 ## Run:
 - `poetry run python3 univ3-test.py`
 
 ## Run (Lite Mode)
 - `poetry run python3 univ3-test-lite.py`
+
+## Run (Lite-Epoch Mode)
+- `poetry run python3 univ3-test-lite-epoch.py`
  
 
 
